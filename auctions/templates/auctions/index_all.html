@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2 class="index_page_header">{{ index_title }}</h2>
+        <div class="row row-cols-1 row-cols-xl-4 row-cols-lg-3 row-cols-sm-2 g-4">
+            {% for listing in listings %}
+                <div class="col">
+                    <a href="{% url 'listing' listing.id %}" class="listing-link p-3">
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="listing-img-side mb-2">
+                                <img
+                                    class="listing-img-side__img"
+                                    src=
+                                        {% if listing.img_url %}
+                                            "{{ listing.img_url }}"
+                                        {% else %}
+                                            "https://fomantic-ui.com/images/wireframe/white-image.png"
+                                        {% endif %}
+                                     alt="{{ listing.title }}">
+                            </div>
+                            <div class="listing-descr-side">
+                                <h3>{{ listing.title }}</h3>
+                                <p class="fs-5 mb-2">
+                                    <span class="fw-bold">
+                                    Price: ${% if listing.get_biggest_bid %}{{ listing.get_biggest_bid.amount }}{% else %}{{ listing.starting_bid }}{% endif %}
+                                    </span>
+                                </p>
+                                <small class="text-muted">
+                                    {{ listing.creation_time }}
+                                </small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% empty %}
+                <p>There are no listings yet</p>
+            {% endfor %}
+        </div>
+{% endblock %}

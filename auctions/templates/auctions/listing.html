@@ -1,0 +1,96 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if message %}
+        <div class="alert alert-danger py-2 my-2">{{ message }}</div>
+    {% endif %}
+    <h2>Listing: {{ listing.title }}</h2>
+    {% if user.is_authenticated and not listing.is_closed %}
+        <form class="watchlist-form mb-2" action=
+            {% if not is_listing_in_user_watchlist %}
+                "{% url 'add_listing_to_watchlist' listing.id %}"
+            {% else %}
+                "{% url 'remove_listing_from_watchlist' listing.id %}" method="post">
+            {% endif %}
+            {% csrf_token %}
+            <button class="watchlist-button {% if is_listing_in_user_watchlist %}watchlist-button_active{% endif %}">
+                Watchlist
+            </button>
+        </form>
+    {% endif %}
+    <div class="listing-img-container">
+        {% if listing.img_url %}
+            <img src="{{ listing.img_url }}" alt="{{ listing.title }}" class="listing-img-container__img">
+        {% else %}
+            <img src="https://fomantic-ui.com/images/wireframe/white-image.png" alt="{{ listing.title }}" class="listing-img-container__img">
+        {% endif %}
+    </div>
+    <div class="mb-2 fs-5">
+        {{ listing.description }}
+    </div>
+    <div class="mb-1 fw-bold fs-3">
+        <span class="listing-price-container__price">
+            ${% if listing.get_biggest_bid %}{{ listing.get_biggest_bid.amount }}{% else %}{{ listing.starting_bid }}{% endif %}
+        </span>
+    </div>
+    {% if listing.is_closed %}
+        <div><span class="badge text-bg-danger">Listing is closed</span></div>
+        <div class="mb-4"><span class="badge text-bg-success">Winner: {% if listing.winner == user %}You{% else %}{{listing.winner.username}}{% endif %}</span></div>
+    {% else %}
+        <div class="fs-6 mb-2">
+            {{ number_of_bids }} bid(s) so far{% if listing.get_biggest_bid.user == user %}, Your bid is the current bid.{% endif %}
+        </div>
+        {% if user.is_authenticated %}
+            {% if listing.creator == user %}
+                <form action="{% url 'close_listing' listing.id %}" method="post" class="mb-4">
+                {% csrf_token %}
+                    <button class="btn btn-danger d-block">
+                        {% if listing.get_biggest_bid.user == None %}
+                            Delete listing
+                        {% else %}
+                            Close listing
+                        {% endif %}
+                    </button>
+                </form>
+            {% else %}
+                <form action="{% url 'make_bid' listing.id %}" method="post" class="mb-4">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ bid_form }}
+                        <button class="btn btn-primary d-block">Bid</button>
+                    </div>
+                </form>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    <h3>Details:</h3>
+    <ul class="mb-4">
+        <li>
+            Listed by:
+            {% if listing.creator == user %}
+                you
+            {% else %}
+                {{ listing.creator.username }}
+            {% endif %}
+        </li>
+        <li>Category: {{ listing.category.name }}</li>
+        <li>Created: {{ listing.creation_time }}</li>
+    </ul>
+    {% if user.is_authenticated %}
+        <form action="{% url 'comment' listing.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ comment_form }}
+                <button class="btn btn-outline-primary mb-3 w-100">Publish</button>
+            </div>
+        </form>
+    {% endif %}
+    {% for comment in listing.comment.all %}
+        <div class="border rounded px-3 py-2 mb-2">
+            <div class="fw-bold d-flex mb-2"><span class="me-2">{{ comment.author }}</span><small class="fw-lighter text-muted ms-auto">{{ comment.creation_time }}</small></div>
+            <div>
+                {{comment.text}}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
