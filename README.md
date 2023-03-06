@@ -13,17 +13,17 @@ Once you have registered as a user and logged in, you can:
 
 # Demonstration
 
-To see how the app works and looks like clone this repository:
+To see how the app works and looks like clone this repository:\
 `git clone https://github.com/RaraykinValery/commerce.git`
 
-Copy test database from test_db to root directory:
+Copy test database from test_db to root directory:\
 `cp test_db/db.sqlite3 .`
 
-Run server:
+Run server:\
 `python manage.py runserver`
 
 # Requirements
 To use Commerce, you will need:
 
-Python 3
-Django 4
+- Python 3
+- Django 4
