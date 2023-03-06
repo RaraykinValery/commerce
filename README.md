@@ -13,13 +13,13 @@ Once you have registered as a user and logged in, you can:
 
 # Demonstration
 
-To see how the app works and looks like clone this repository:\
+To see how the app works and looks, clone this repository:\
 `git clone https://github.com/RaraykinValery/commerce.git`
 
-Copy test database from test_db to root directory:\
+Copy the test database from the test_db directory to the root directory:\
 `cp test_db/db.sqlite3 .`
 
-Run server:\
+To run the server, use the following command:\
 `python manage.py runserver`
 
 # Requirements
