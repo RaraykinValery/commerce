@@ -5,11 +5,13 @@ from django.db import models
 class User(AbstractUser):
     listings_watched = models.ManyToManyField("Listing", blank=True, related_name="watching_users")
 
+
 class Category(models.Model):
     name = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
+
 
 class Listing(models.Model):
     title = models.CharField(max_length=255, blank=False)
@@ -33,6 +35,7 @@ class Listing(models.Model):
     def __str__(self):
         return f"{self.title}"
 
+
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bid_maker")
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -42,6 +45,7 @@ class Bid(models.Model):
     def __str__(self):
         return f"{self.user} made bid of {self.amount} to {self.listing}"
 
+
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_comment")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comment")
@@ -50,4 +54,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.author} commented {self.listing}"
-
