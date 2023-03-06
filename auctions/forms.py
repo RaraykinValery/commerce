@@ -1,10 +1,8 @@
 from django import forms
 from django.forms.utils import ErrorList
 
-from .models import Listing, Category, Comment, Bid
+from .models import Listing, Comment, Bid
 
-
-CATEGORIES = [(category.pk, category.name) for category in Category.objects.all()]
 
 class DivErrorList(ErrorList):
         def __str__(self):
